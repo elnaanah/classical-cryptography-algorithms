@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classical Cryptography Algorithms</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Classical Cryptography Algorithms</h1>
+            <p class="subtitle">Educational Tool for Learning Encryption Techniques</p>
+        </header>
+
+        <main>
+            <!-- Algorithm Selection -->
+            <section class="card">
+                <label for="algorithm-select">Select Algorithm</label>
+                <select id="algorithm-select">
+                    <optgroup label="Substitution Ciphers">
+                        <option value="caesar">Caesar Cipher</option>
+                        <option value="multiplicative">Multiplicative Cipher</option>
+                        <option value="affine">Affine Cipher</option>
+                        <option value="monoalphabetic">Monoalphabetic Cipher</option>
+                        <option value="vigenere">Vigenère Cipher</option>
+                        <option value="autokey">Autokey Cipher</option>
+                        <option value="playfair">Playfair Cipher</option>
+                        <option value="hill">Hill Cipher</option>
+                        <option value="otp">One-Time Pad</option>
+                    </optgroup>
+                    <optgroup label="Transposition Ciphers">
+                        <option value="railfence">Rail Fence Cipher</option>
+                        <option value="columnar">Columnar Transposition</option>
+                    </optgroup>
+                </select>
+            </section>
+
+            <!-- Algorithm Info Card -->
+            <section class="card info-card" id="algorithm-info">
+                <h3 id="algo-name">Caesar Cipher</h3>
+                <div class="formula-box">
+                    <span class="formula-label">Formula:</span>
+                    <code id="algo-formula">C = (P + k) mod 26</code>
+                </div>
+                <p id="algo-desc" class="description"></p>
+                
+                <!-- Educational Hint -->
+                <div class="edu-hint" id="edu-hint">
+                    <span class="hint-icon">💡</span>
+                    <span id="edu-hint-text"></span>
+                </div>
+                
+                <p class="security-warning">⚠ Classical cipher - not secure for modern use</p>
+            </section>
+
+            <!-- Input Section -->
+            <section class="card input-section">
+                <div class="section-header">
+                    <label for="input-text">Plaintext / Ciphertext</label>
+                    <span class="field-hint">Enter the text you want to encrypt or decrypt</span>
+                </div>
+                <textarea id="input-text" placeholder="Enter your text here..." rows="4"></textarea>
+                <div class="char-counter">
+                    <span id="letter-count">0</span> letters | <span id="total-count">0</span> total characters
+                </div>
+            </section>
+
+            <!-- Dynamic Key Input Section -->
+            <section class="card key-section" id="key-section">
+                <div class="section-header">
+                    <label id="key-label">Key</label>
+                    <span class="field-hint" id="key-field-hint">Configure the encryption key</span>
+                </div>
+                
+                <!-- Validation Status -->
+                <div class="validation-status" id="validation-status">
+                    <span class="status-icon" id="status-icon">○</span>
+                    <span class="status-text" id="status-text">Enter a key</span>
+                </div>
+                
+                <!-- Caesar / Multiplicative / Rail Fence: Single Number -->
+                <div id="key-number" class="key-input">
+                    <input type="number" id="key-num" placeholder="Enter numeric key" min="0">
+                    <span id="key-hint" class="hint"></span>
+                </div>
+
+                <!-- Affine: Two Numbers (a, b) -->
+                <div id="key-affine" class="key-input hidden">
+                    <div class="affine-inputs">
+                        <div>
+                            <label for="key-a">a (multiplicative)</label>
+                            <input type="number" id="key-a" placeholder="a" min="1" max="25">
+                        </div>
+                        <div>
+                            <label for="key-b">b (additive)</label>
+                            <input type="number" id="key-b" placeholder="b" min="0" max="25">
+                        </div>
+                    </div>
+                    <span class="hint">a must be coprime with 26: {1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25}</span>
+                </div>
+
+                <!-- Vigenère / Autokey / Playfair / Columnar: Keyword -->
+                <div id="key-text" class="key-input hidden">
+                    <input type="text" id="key-word" placeholder="Enter keyword">
+                    <span id="key-text-hint" class="hint"></span>
+                </div>
+
+                <!-- One-Time Pad: Key must match text length -->
+                <div id="key-otp" class="key-input hidden">
+                    <textarea id="key-otp-text" placeholder="Enter key (must be same length as message)" rows="2"></textarea>
+                    <span class="hint">Key length must equal the number of letters in the message</span>
+                    <div id="otp-counter" class="otp-counter">
+                        <span>Text: <strong id="otp-text-len">0</strong> letters</span>
+                        <span>Key: <strong id="otp-key-len">0</strong> letters</span>
+                        <span id="otp-match" class="otp-mismatch">✗ Mismatch</span>
+                    </div>
+                </div>
+
+                <!-- Monoalphabetic: 26-letter permutation -->
+                <div id="key-mono" class="key-input hidden">
+                    <input type="text" id="key-mono-text" placeholder="Enter 26-letter alphabet permutation" maxlength="26">
+                    <span class="hint">Must be exactly 26 unique letters (A-Z in any order)</span>
+                    <div class="mono-counter">
+                        <span id="mono-count">0</span>/26 letters
+                    </div>
+                </div>
+
+                <!-- Hill: Matrix -->
+                <div id="key-hill" class="key-input hidden">
+                    <div class="matrix-size">
+                        <label>Matrix Size:</label>
+                        <select id="hill-size">
+                            <option value="2">2×2</option>
+                            <option value="3">3×3</option>
+                        </select>
+                    </div>
+                    <div id="hill-matrix-2" class="matrix-grid matrix-2x2">
+                        <input type="number" class="matrix-cell" data-row="0" data-col="0" placeholder="0">
+                        <input type="number" class="matrix-cell" data-row="0" data-col="1" placeholder="0">
+                        <input type="number" class="matrix-cell" data-row="1" data-col="0" placeholder="0">
+                        <input type="number" class="matrix-cell" data-row="1" data-col="1" placeholder="0">
+                    </div>
+                    <div id="hill-matrix-3" class="matrix-grid matrix-3x3 hidden">
+                        <input type="number" class="matrix-cell" data-row="0" data-col="0" placeholder="0">
+                        <input type="number" class="matrix-cell" data-row="0" data-col="1" placeholder="0">
+                        <input type="number" class="matrix-cell" data-row="0" data-col="2" placeholder="0">
+                        <input type="number" class="matrix-cell" data-row="1" data-col="0" placeholder="0">
+                        <input type="number" class="matrix-cell" data-row="1" data-col="1" placeholder="0">
+                        <input type="number" class="matrix-cell" data-row="1" data-col="2" placeholder="0">
+                        <input type="number" class="matrix-cell" data-row="2" data-col="0" placeholder="0">
+                        <input type="number" class="matrix-cell" data-row="2" data-col="1" placeholder="0">
+                        <input type="number" class="matrix-cell" data-row="2" data-col="2" placeholder="0">
+                    </div>
+                    <span class="hint">Matrix determinant must be coprime with 26 (det ∉ {0, 2, 4, 6, 8, 10, 12, 13, 14, ...})</span>
+                    <div id="hill-det" class="hill-det">Determinant: <strong>—</strong></div>
+                </div>
+            </section>
+
+            <!-- Operation Buttons -->
+            <section class="card actions">
+                <button id="btn-encrypt" class="btn btn-primary" disabled>
+                    <span class="btn-icon">🔒</span> Encrypt
+                </button>
+                <button id="btn-decrypt" class="btn btn-secondary" disabled>
+                    <span class="btn-icon">🔓</span> Decrypt
+                </button>
+            </section>
+
+            <!-- Error Display -->
+            <div id="error-message" class="error hidden"></div>
+
+            <!-- Output Section -->
+            <section class="card output-section">
+                <div class="section-header">
+                    <label for="output-text">Output</label>
+                    <div class="output-actions">
+                        <button id="btn-copy" class="btn-copy" title="Copy to clipboard">📋 Copy</button>
+                        <button id="btn-swap" class="btn-swap" title="Use output as input">↺ Swap</button>
+                    </div>
+                </div>
+                <textarea id="output-text" readonly rows="4" placeholder="Result will appear here..."></textarea>
+                <p class="output-note">This field is read-only. Use "Swap" to move output to input.</p>
+            </section>
+        </main>
+
+        <footer>
+            <p>Classical Cryptography Educational Tool</p>
+            <p class="footer-note">All algorithms are for educational purposes only</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
