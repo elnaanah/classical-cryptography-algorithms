@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مخططات تدفقية لخوارزميات التشفير الكلاسيكية</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            background: #667eea;
+            color: white;
+        }
+        
+        .nav-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .flowchart-section {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .flowchart-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .section-title {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .section-description {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-right: 5px solid #667eea;
+        }
+        
+        .section-description h3 {
+            color: #764ba2;
+            margin-bottom: 10px;
+        }
+        
+        .section-description ul {
+            margin-right: 25px;
+            line-height: 1.8;
+        }
+        
+        .section-description li {
+            margin-bottom: 8px;
+        }
+        
+        .mermaid {
+            text-align: center;
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            margin-top: 30px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .emoji {
+            font-size: 1.3em;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .nav-btn {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+            
+            .section-title {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 مخططات تدفقية لخوارزميات التشفير الكلاسيكية 🔐</h1>
+        
+        <div class="nav-buttons">
+            <button class="nav-btn active" onclick="showFlowchart('affine')">Affine Cipher</button>
+            <button class="nav-btn" onclick="showFlowchart('playfair')">Playfair Cipher</button>
+            <button class="nav-btn" onclick="showFlowchart('hill')">Hill Cipher</button>
+            <button class="nav-btn" onclick="showFlowchart('autokey')">Autokey Cipher</button>
+            <button class="nav-btn" onclick="showFlowchart('otp')">One-Time Pad</button>
+        </div>
+        
+        <!-- Affine Cipher -->
+        <div id="affine" class="flowchart-section active">
+            <h2 class="section-title"><span class="emoji">🔐</span> Affine Cipher</h2>
+            <div class="section-description">
+                <h3>الخصائص الأساسية:</h3>
+                <ul>
+                    <li><strong>الشرط الأساسي:</strong> gcd(a, 26) = 1 لضمان وجود معكوس ضربي</li>
+                    <li><strong>القيم الصالحة لـ a:</strong> {1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25}</li>
+                    <li><strong>معادلة التشفير:</strong> C = (a × P + b) mod 26</li>
+                    <li><strong>معادلة فك التشفير:</strong> P = a⁻¹ × (C - b) mod 26</li>
+                </ul>
+            </div>
+            <div class="mermaid">
+flowchart TD
+    Start([البداية])
+    Start --> Input1[/إدخال النص الصريح P/]
+    Input1 --> Input2[/إدخال المعاملين a و b/]
+    Input2 --> CheckGCD{هل gcd a, 26 = 1؟}
+    
+    CheckGCD -->|لا| Error1[/خطأ: المفتاح غير صالح/]
+    Error1 --> End1([النهاية])
+    
+    CheckGCD -->|نعم| Mode{اختر العملية}
+    
+    Mode -->|تشفير| EncLoop[لكل حرف في النص]
+    EncLoop --> Convert1[تحويل الحرف إلى رقم: x = P - A]
+    Convert1 --> EncCalc[حساب: C = a × x + b mod 26]
+    EncCalc --> ToChar1[تحويل الرقم إلى حرف مشفر]
+    ToChar1 --> MoreEnc{هل يوجد المزيد؟}
+    MoreEnc -->|نعم| EncLoop
+    MoreEnc -->|لا| OutputEnc[/إخراج النص المشفر C/]
+    OutputEnc --> End2([النهاية])
+    
+    Mode -->|فك تشفير| FindInv[حساب المعكوس الضربي: a⁻¹ mod 26]
+    FindInv --> DecLoop[لكل حرف في النص المشفر]
+    DecLoop --> Convert2[تحويل الحرف إلى رقم: y = C - A]
+    Convert2 --> DecCalc[حساب: P = a⁻¹ × y - b mod 26]
+    DecCalc --> ToChar2[تحويل الرقم إلى حرف صريح]
+    ToChar2 --> MoreDec{هل يوجد المزيد؟}
+    MoreDec -->|نعم| DecLoop
+    MoreDec -->|لا| OutputDec[/إخراج النص الصريح P/]
+    OutputDec --> End3([النهاية])
+            </div>
+        </div>
+        
+        <!-- Playfair Cipher -->
+        <div id="playfair" class="flowchart-section">
+            <h2 class="section-title"><span class="emoji">🔐</span> Playfair Cipher</h2>
+            <div class="section-description">
+                <h3>الخصائص الأساسية:</h3>
+                <ul>
+                    <li><strong>المصفوفة:</strong> 5×5 (25 حرف - I و J يدمجان)</li>
+                    <li><strong>معالجة الأزواج المتطابقة:</strong> إدراج X بين الحرفين</li>
+                    <li><strong>الحروف الفردية:</strong> إضافة X في النهاية</li>
+                    <li><strong>ثلاث حالات:</strong> نفس الصف، نفس العمود، مستطيل</li>
+                </ul>
+            </div>
+            <div class="mermaid">
+flowchart TD
+    Start([البداية])
+    Start --> InputKey[/إدخال كلمة المفتاح/]
+    InputKey --> RemoveDup[إزالة الأحرف المكررة من المفتاح]
+    RemoveDup --> BuildMatrix[بناء مصفوفة 5×5: المفتاح + باقي الأحرف]
+    BuildMatrix --> MergeIJ[دمج I و J في خانة واحدة]
+    
+    MergeIJ --> InputText[/إدخال النص الصريح/]
+    InputText --> CleanText[إزالة المسافات والرموز]
+    CleanText --> PreparePairs[تقسيم النص إلى أزواج]
+    
+    PreparePairs --> PairLoop[معالجة كل زوج]
+    PairLoop --> CheckSame{هل الحرفان متطابقان؟}
+    CheckSame -->|نعم| InsertX[إدراج X بين الحرفين]
+    InsertX --> PairLoop
+    
+    CheckSame -->|لا| CheckOdd{هل عدد الأحرف فردي؟}
+    CheckOdd -->|نعم| AddX[إضافة X في النهاية]
+    CheckOdd -->|لا| ProcessPair
+    AddX --> ProcessPair
+    
+    ProcessPair[معالجة الزوج الحالي]
+    ProcessPair --> FindPos[إيجاد موقع الحرفين في المصفوفة]
+    FindPos --> CheckRow{هل في نفس الصف؟}
+    
+    CheckRow -->|نعم| ShiftRight[الانتقال لليمين: العمود + 1 mod 5]
+    ShiftRight --> GetCipher1[استخراج الحرفين المشفرين]
+    GetCipher1 --> MorePairs1{المزيد من الأزواج؟}
+    
+    CheckRow -->|لا| CheckCol{هل في نفس العمود؟}
+    CheckCol -->|نعم| ShiftDown[الانتقال للأسفل: الصف + 1 mod 5]
+    ShiftDown --> GetCipher2[استخراج الحرفين المشفرين]
+    GetCipher2 --> MorePairs2{المزيد من الأزواج؟}
+    
+    CheckCol -->|لا| Rectangle[تشكيل مستطيل]
+    Rectangle --> SwapCorners[تبديل الأركان: كل حرف يأخذ عمود الآخر]
+    SwapCorners --> GetCipher3[استخراج الحرفين المشفرين]
+    GetCipher3 --> MorePairs3{المزيد من الأزواج؟}
+    
+    MorePairs1 -->|نعم| PairLoop
+    MorePairs2 -->|نعم| PairLoop
+    MorePairs3 -->|نعم| PairLoop
+    
+    MorePairs1 -->|لا| Output
+    MorePairs2 -->|لا| Output
+    MorePairs3 -->|لا| Output
+    
+    Output[/إخراج النص المشفر/]
+    Output --> End([النهاية])
+            </div>
+        </div>
+        
+        <!-- Hill Cipher -->
+        <div id="hill" class="flowchart-section">
+            <h2 class="section-title"><span class="emoji">🔐</span> Hill Cipher</h2>
+            <div class="section-description">
+                <h3>الخصائص الأساسية:</h3>
+                <ul>
+                    <li><strong>حجم المفتاح:</strong> مصفوفة n×n (عادة 2×2 أو 3×3)</li>
+                    <li><strong>شرط العكس:</strong> gcd(det(K), 26) = 1</li>
+                    <li><strong>معادلة التشفير:</strong> C = K × P mod 26</li>
+                    <li><strong>معادلة فك التشفير:</strong> P = K⁻¹ × C mod 26</li>
+                    <li><strong>الأمان:</strong> يزداد بزيادة حجم المصفوفة</li>
+                </ul>
+            </div>
+            <div class="mermaid">
+flowchart TD
+    Start([البداية])
+    Start --> InputKey[/إدخال مصفوفة المفتاح K بحجم n×n/]
+    InputKey --> CalcDet[حساب محدد المصفوفة: det K mod 26]
+    CalcDet --> CheckInv{هل gcd det K, 26 = 1؟}
+    
+    CheckInv -->|لا| Error[/خطأ: المصفوفة غير قابلة للعكس/]
+    Error --> End1([النهاية])
+    
+    CheckInv -->|نعم| Mode{اختر العملية}
+    
+    Mode -->|تشفير| InputPlain[/إدخال النص الصريح P/]
+    InputPlain --> CleanP[تنظيف النص وتحويله لأرقام]
+    CleanP --> CheckLen{هل طول النص مضاعف n؟}
+    CheckLen -->|لا| PadText[إضافة حروف حشو]
+    CheckLen -->|نعم| DivideBlocks
+    PadText --> DivideBlocks[تقسيم النص إلى كتل بحجم n]
+    
+    DivideBlocks --> EncBlock[معالجة كتلة]
+    EncBlock --> ToVector[تحويل الكتلة إلى متجه عمودي P]
+    ToVector --> MatMult1[ضرب المصفوفات: C = K × P mod 26]
+    MatMult1 --> VectorToText1[تحويل المتجه الناتج إلى نص]
+    VectorToText1 --> MoreBlocks1{المزيد من الكتل؟}
+    MoreBlocks1 -->|نعم| EncBlock
+    MoreBlocks1 -->|لا| OutputEnc[/إخراج النص المشفر C/]
+    OutputEnc --> End2([النهاية])
+    
+    Mode -->|فك تشفير| CalcInvMatrix[حساب المصفوفة العكسية: K⁻¹ mod 26]
+    CalcInvMatrix --> Step1[حساب مصفوفة المرافقات: adj K]
+    Step1 --> Step2[حساب: det K ⁻¹ mod 26]
+    Step2 --> Step3[حساب: K⁻¹ = det K ⁻¹ × adj K mod 26]
+    
+    Step3 --> InputCipher[/إدخال النص المشفر C/]
+    InputCipher --> DivideBlocks2[تقسيم إلى كتل بحجم n]
+    DivideBlocks2 --> DecBlock[معالجة كتلة]
+    DecBlock --> ToVector2[تحويل الكتلة إلى متجه C]
+    ToVector2 --> MatMult2[ضرب المصفوفات: P = K⁻¹ × C mod 26]
+    MatMult2 --> VectorToText2[تحويل المتجه الناتج إلى نص]
+    VectorToText2 --> MoreBlocks2{المزيد من الكتل؟}
+    MoreBlocks2 -->|نعم| DecBlock
+    MoreBlocks2 -->|لا| OutputDec[/إخراج النص الصريح P/]
+    OutputDec --> End3([النهاية])
+            </div>
+        </div>
+        
+        <!-- Autokey Cipher -->
+        <div id="autokey" class="flowchart-section">
+            <h2 class="section-title"><span class="emoji">🔐</span> Autokey Cipher</h2>
+            <div class="section-description">
+                <h3>الخصائص الأساسية:</h3>
+                <ul>
+                    <li><strong>المفتاح الديناميكي:</strong> ينمو بإضافة النص الصريح</li>
+                    <li><strong>التشفير:</strong> Cᵢ = (Pᵢ + Kᵢ) mod 26</li>
+                    <li><strong>فك التشفير:</strong> Pᵢ = (Cᵢ - Kᵢ) mod 26</li>
+                    <li><strong>الفرق الجوهري:</strong> في التشفير يضاف الـ plaintext، في فك التشفير يضاف الـ plaintext المستخرج</li>
+                    <li><strong>الميزة:</strong> كل حرف له مفتاح فريد</li>
+                </ul>
+            </div>
+            <div class="mermaid">
+flowchart TD
+    Start([البداية])
+    Start --> Mode{اختر العملية}
+    
+    Mode -->|تشفير| InputKey[/إدخال المفتاح الأولي K/]
+    InputKey --> InputPlain[/إدخال النص الصريح P/]
+    InputPlain --> InitKey[تهيئة: مفتاح التشفير = K]
+    InitKey --> EncLoop[لكل حرف Pᵢ في النص]
+    
+    EncLoop --> ConvertP[تحويل Pᵢ إلى رقم: pᵢ = Pᵢ - A]
+    ConvertP --> GetKeyChar[الحصول على حرف المفتاح الحالي Kᵢ]
+    GetKeyChar --> ConvertK[تحويل Kᵢ إلى رقم: kᵢ = Kᵢ - A]
+    ConvertK --> EncCalc[حساب: cᵢ = pᵢ + kᵢ mod 26]
+    EncCalc --> ToCharEnc[تحويل cᵢ إلى حرف Cᵢ]
+    ToCharEnc --> AppendKey[إلحاق Pᵢ بمفتاح التشفير]
+    AppendKey --> MoreEnc{المزيد من الأحرف؟}
+    
+    MoreEnc -->|نعم| EncLoop
+    MoreEnc -->|لا| OutputEnc[/إخراج النص المشفر C/]
+    OutputEnc --> End1([النهاية])
+    
+    Mode -->|فك تشفير| InputKey2[/إدخال المفتاح الأولي K/]
+    InputKey2 --> InputCipher[/إدخال النص المشفر C/]
+    InputCipher --> InitKey2[تهيئة: مفتاح فك التشفير = K]
+    InitKey2 --> DecLoop[لكل حرف Cᵢ في النص المشفر]
+    
+    DecLoop --> ConvertC[تحويل Cᵢ إلى رقم: cᵢ = Cᵢ - A]
+    ConvertC --> GetKeyChar2[الحصول على حرف المفتاح الحالي Kᵢ]
+    GetKeyChar2 --> ConvertK2[تحويل Kᵢ إلى رقم: kᵢ = Kᵢ - A]
+    ConvertK2 --> DecCalc[حساب: pᵢ = cᵢ - kᵢ mod 26]
+    DecCalc --> ToCharDec[تحويل pᵢ إلى حرف Pᵢ]
+    ToCharDec --> AppendKey2[إلحاق Pᵢ الناتج بمفتاح فك التشفير]
+    AppendKey2 --> MoreDec{المزيد من الأحرف؟}
+    
+    MoreDec -->|نعم| DecLoop
+    MoreDec -->|لا| OutputDec[/إخراج النص الصريح P/]
+    OutputDec --> End2([النهاية])
+            </div>
+        </div>
+        
+        <!-- One-Time Pad -->
+        <div id="otp" class="flowchart-section">
+            <h2 class="section-title"><span class="emoji">🔐</span> One-Time Pad</h2>
+            <div class="section-description">
+                <h3>الخصائص الأساسية:</h3>
+                <ul>
+                    <li><strong>الشرط الأساسي:</strong> طول المفتاح = طول النص (بالضبط)</li>
+                    <li><strong>العشوائية:</strong> يجب أن يكون المفتاح عشوائياً حقيقياً</li>
+                    <li><strong>الاستخدام الواحد:</strong> المفتاح يستخدم مرة واحدة فقط</li>
+                    <li><strong>الأمان المثالي:</strong> آمن رياضياً بشكل كامل إذا التزمنا بالشروط</li>
+                    <li><strong>التماثل:</strong> عملية التشفير = عملية فك التشفير (XOR)</li>
+                </ul>
+            </div>
+            <div class="mermaid">
+flowchart TD
+    Start([البداية])
+    Start --> InputText[/إدخال النص P/]
+    InputText --> InputKey[/إدخال المفتاح K/]
+    InputKey --> CheckLen{هل طول K = طول P؟}
+    
+    CheckLen -->|لا| Error[/خطأ: طول المفتاح يجب أن يساوي طول النص تماماً/]
+    Error --> End1([النهاية])
+    
+    CheckLen -->|نعم| CheckRandom{هل المفتاح عشوائي حقيقي؟}
+    CheckRandom -->|لا| Warning[/تحذير: الأمان ليس مثالياً/]
+    Warning --> Process
+    CheckRandom -->|نعم| Process
+    
+    Process[معالجة كل حرف]
+    Process --> Loop[لكل موضع i]
+    Loop --> ConvertP[تحويل الحرف Pᵢ إلى رقم: pᵢ]
+    ConvertP --> ConvertK[تحويل حرف المفتاح Kᵢ إلى رقم: kᵢ]
+    
+    ConvertK --> Method{اختر طريقة التشفير}
+    
+    Method -->|XOR| XORCalc[حساب: cᵢ = pᵢ ⊕ kᵢ]
+    XORCalc --> MoreXOR{المزيد من الأحرف؟}
+    MoreXOR -->|نعم| Loop
+    MoreXOR -->|لا| Output1[/إخراج النص المشفر C/]
+    Output1 --> Note1[ملاحظة: فك التشفير = نفس العملية]
+    Note1 --> Decrypt1[لفك التشفير: pᵢ = cᵢ ⊕ kᵢ]
+    Decrypt1 --> End2([النهاية])
+    
+    Method -->|Modular Addition| ModCalc[حساب: cᵢ = pᵢ + kᵢ mod 26]
+    ModCalc --> MoreMod{المزيد من الأحرف؟}
+    MoreMod -->|نعم| Loop
+    MoreMod -->|لا| Output2[/إخراج النص المشفر C/]
+    Output2 --> Note2[ملاحظة: فك التشفير متماثل]
+    Note2 --> Decrypt2[لفك التشفير: pᵢ = cᵢ - kᵢ mod 26]
+    Decrypt2 --> KeyWarning[/تحذير: لا تعد استخدام المفتاح أبداً!/]
+    KeyWarning --> End3([النهاية])
+            </div>
+        </div>
+        
+        <div class="footer">
+            <h3>💡 ملاحظات مهمة</h3>
+            <p>جميع المخططات أعلاه مستقلة عن لغات البرمجة وتركز على المنطق الرياضي والخطوات الأكاديمية</p>
+            <p style="margin-top: 10px;">تم إنشاؤها باستخدام Mermaid.js لسهولة التعديل والاستخدام الأكاديمي</p>
+        </div>
+    </div>
+    
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+        
+        function showFlowchart(id) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.flowchart-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(id).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Scroll to top smoothly
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

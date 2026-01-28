@@ -12,7 +12,12 @@ project/
 │   ├── caesar.js                 # شيفرة قيصر
 │   ├── multiplicative.js         # الشيفرة الضربية
 │   ├── monoalphabetic.js         # الاستبدال الأحادي
-│   └── vigenere.js               # شيفرة فيجنير
+│   ├── vigenere.js               # شيفرة فيجنير
+│   ├── affine.js                 # الشيفرة التآلفية
+│   ├── playfair.js               # شيفرة بلايفير
+│   ├── hill.js                   # شيفرة هيل
+│   ├── autokey.js                # شيفرة المفتاح التلقائي
+│   └── onetimepad.js             # لوحة المرة الواحدة
 └── transposition/                # خوارزميات التبديل
     ├── railfence.js              # شيفرة السياج
     └── columnar.js               # التبديل العمودي
@@ -63,7 +68,62 @@ vigenere.encrypt("HELLO", "KEY");  // RIJVS
 vigenere.decrypt("RIJVS", "KEY");  // HELLO
 ```
 
-### 5. شيفرة السياج (Rail Fence Cipher)
+### 5. الشيفرة التآلفية (Affine Cipher)
+- **التشفير**: `C = (aP + b) mod 26`
+- **فك التشفير**: `P = a⁻¹(C - b) mod 26`
+- **المفتاح**: كائن `{a, b}` حيث `gcd(a, 26) = 1`
+
+```javascript
+const affine = require('./substitution/affine');
+affine.encrypt("HELLO", { a: 5, b: 8 });  // RCLLA
+affine.decrypt("RCLLA", { a: 5, b: 8 });  // HELLO
+```
+
+### 6. شيفرة بلايفير (Playfair Cipher)
+- **المفتاح**: كلمة تُستخدم لبناء مصفوفة 5×5
+- **القواعد**: نفس الصف (إزاحة يمين)، نفس العمود (إزاحة أسفل)، مستطيل (تبديل الأعمدة)
+
+```javascript
+const playfair = require('./substitution/playfair');
+playfair.encrypt("HELLO", "MONARCHY");  // CFSUPM
+playfair.decrypt("CFSUPM", "MONARCHY"); // HELXLO
+```
+
+> **ملاحظة حول Padding:** شيفرة Playfair تعالج النص كأزواج من الحروف (digraphs). عند وجود حرفين متتاليين متماثلين (مثل `LL` في `HELLO`)، يُدخل الحرف `X` بينهما ليصبح `LX` و `LO`. لذلك عند فك التشفير يظهر `HELXLO` بدلاً من `HELLO`. هذا سلوك قياسي للخوارزمية وليس خطأ - إزالة حروف الـ padding تتطلب معالجة إضافية خارج نطاق الخوارزمية الأساسية.
+
+### 7. شيفرة هيل (Hill Cipher)
+- **التشفير**: `C = K × P mod 26` (ضرب مصفوفات)
+- **فك التشفير**: `P = K⁻¹ × C mod 26`
+- **المفتاح**: مصفوفة مربعة (2×2 أو 3×3) قابلة للعكس mod 26
+
+```javascript
+const hill = require('./substitution/hill');
+const key = [[6, 24, 1], [13, 16, 10], [20, 17, 15]];
+hill.encrypt("ACT", key);  // POH
+hill.decrypt("POH", key);  // ACT
+```
+
+### 8. شيفرة المفتاح التلقائي (Autokey Cipher)
+- **التشفير**: `C = (P + K) mod 26`
+- **المفتاح**: يبدأ بكلمة ثم يُستكمل من النص الصريح
+
+```javascript
+const autokey = require('./substitution/autokey');
+autokey.encrypt("HELLO", "KEY");  // RIJSS
+autokey.decrypt("RIJSS", "KEY");  // HELLO
+```
+
+### 9. لوحة المرة الواحدة (One-Time Pad)
+- **التشفير**: `C = (P + K) mod 26`
+- **المفتاح**: بطول النص تماماً (يرفض التنفيذ إذا اختلف الطول)
+
+```javascript
+const otp = require('./substitution/onetimepad');
+otp.encrypt("HELLO", "XMCKL");  // EQNVZ
+otp.decrypt("EQNVZ", "XMCKL");  // HELLO
+```
+
+### 10. شيفرة السياج (Rail Fence Cipher)
 - كتابة النص قطرياً على عدة سطور ثم القراءة أفقياً
 
 ```javascript
@@ -72,7 +132,7 @@ railfence.encrypt("HELLOWORLD", 3);  // HOLELWRDLO
 railfence.decrypt("HOLELWRDLO", 3);  // HELLOWORLD
 ```
 
-### 6. التبديل العمودي (Columnar Transposition)
+### 11. التبديل العمودي (Columnar Transposition)
 - كتابة النص في جدول وقراءة الأعمدة حسب ترتيب المفتاح أبجدياً
 
 ```javascript
