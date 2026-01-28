@@ -26,7 +26,7 @@
         
         h1 {
             text-align: center;
-            color: white;
+            color: white; 
             font-size: 2.5em;
             margin-bottom: 20px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
@@ -192,7 +192,7 @@ flowchart TD
     Start([البداية])
     Start --> Input1[/إدخال النص الصريح P/]
     Input1 --> Input2[/إدخال المعاملين a و b/]
-    Input2 --> CheckGCD{هل gcd a, 26 = 1؟}
+    Input2 --> CheckGCD{"هل gcd(a, 26) = 1؟"}
     
     CheckGCD -->|لا| Error1[/خطأ: المفتاح غير صالح/]
     Error1 --> End1([النهاية])
@@ -201,7 +201,7 @@ flowchart TD
     
     Mode -->|تشفير| EncLoop[لكل حرف في النص]
     EncLoop --> Convert1[تحويل الحرف إلى رقم: x = P - A]
-    Convert1 --> EncCalc[حساب: C = a × x + b mod 26]
+    Convert1 --> EncCalc["حساب: C = (a × x + b) mod 26"]
     EncCalc --> ToChar1[تحويل الرقم إلى حرف مشفر]
     ToChar1 --> MoreEnc{هل يوجد المزيد؟}
     MoreEnc -->|نعم| EncLoop
@@ -211,7 +211,7 @@ flowchart TD
     Mode -->|فك تشفير| FindInv[حساب المعكوس الضربي: a⁻¹ mod 26]
     FindInv --> DecLoop[لكل حرف في النص المشفر]
     DecLoop --> Convert2[تحويل الحرف إلى رقم: y = C - A]
-    Convert2 --> DecCalc[حساب: P = a⁻¹ × y - b mod 26]
+    Convert2 --> DecCalc["حساب: P = a⁻¹ × (y - b) mod 26"]
     DecCalc --> ToChar2[تحويل الرقم إلى حرف صريح]
     ToChar2 --> MoreDec{هل يوجد المزيد؟}
     MoreDec -->|نعم| DecLoop
@@ -234,54 +234,35 @@ flowchart TD
             </div>
             <div class="mermaid">
 flowchart TD
-    Start([البداية])
-    Start --> InputKey[/إدخال كلمة المفتاح/]
-    InputKey --> RemoveDup[إزالة الأحرف المكررة من المفتاح]
-    RemoveDup --> BuildMatrix[بناء مصفوفة 5×5: المفتاح + باقي الأحرف]
-    BuildMatrix --> MergeIJ[دمج I و J في خانة واحدة]
-    
-    MergeIJ --> InputText[/إدخال النص الصريح/]
-    InputText --> CleanText[إزالة المسافات والرموز]
-    CleanText --> PreparePairs[تقسيم النص إلى أزواج]
-    
-    PreparePairs --> PairLoop[معالجة كل زوج]
-    PairLoop --> CheckSame{هل الحرفان متطابقان؟}
-    CheckSame -->|نعم| InsertX[إدراج X بين الحرفين]
-    InsertX --> PairLoop
-    
-    CheckSame -->|لا| CheckOdd{هل عدد الأحرف فردي؟}
-    CheckOdd -->|نعم| AddX[إضافة X في النهاية]
-    CheckOdd -->|لا| ProcessPair
-    AddX --> ProcessPair
-    
-    ProcessPair[معالجة الزوج الحالي]
-    ProcessPair --> FindPos[إيجاد موقع الحرفين في المصفوفة]
-    FindPos --> CheckRow{هل في نفس الصف؟}
-    
-    CheckRow -->|نعم| ShiftRight[الانتقال لليمين: العمود + 1 mod 5]
-    ShiftRight --> GetCipher1[استخراج الحرفين المشفرين]
-    GetCipher1 --> MorePairs1{المزيد من الأزواج؟}
-    
-    CheckRow -->|لا| CheckCol{هل في نفس العمود؟}
-    CheckCol -->|نعم| ShiftDown[الانتقال للأسفل: الصف + 1 mod 5]
-    ShiftDown --> GetCipher2[استخراج الحرفين المشفرين]
-    GetCipher2 --> MorePairs2{المزيد من الأزواج؟}
-    
-    CheckCol -->|لا| Rectangle[تشكيل مستطيل]
-    Rectangle --> SwapCorners[تبديل الأركان: كل حرف يأخذ عمود الآخر]
-    SwapCorners --> GetCipher3[استخراج الحرفين المشفرين]
-    GetCipher3 --> MorePairs3{المزيد من الأزواج؟}
-    
-    MorePairs1 -->|نعم| PairLoop
-    MorePairs2 -->|نعم| PairLoop
-    MorePairs3 -->|نعم| PairLoop
-    
-    MorePairs1 -->|لا| Output
-    MorePairs2 -->|لا| Output
-    MorePairs3 -->|لا| Output
-    
-    Output[/إخراج النص المشفر/]
-    Output --> End([النهاية])
+    A([Start]) --> B[/Input Key/]
+    B --> C[Remove Duplicates]
+    C --> D[Build 5x5 Matrix]
+    D --> E[Merge I and J]
+    E --> F[/Input Plaintext/]
+    F --> G[Clean Text]
+    G --> H[Split into Pairs]
+    H --> I[Process Each Pair]
+    I --> J{Same Letters?}
+    J -->|Yes| K[Insert X]
+    K --> I
+    J -->|No| L{Odd Length?}
+    L -->|Yes| M[Add X at End]
+    L -->|No| N
+    M --> N[Find Positions]
+    N --> O{Same Row?}
+    O -->|Yes| P[Shift Right]
+    P --> Q[Get Cipher Pair]
+    O -->|No| R{Same Column?}
+    R -->|Yes| S[Shift Down]
+    S --> T[Get Cipher Pair]
+    R -->|No| U[Rectangle Swap]
+    U --> V[Get Cipher Pair]
+    Q --> W{More Pairs?}
+    T --> W
+    V --> W
+    W -->|Yes| I
+    W -->|No| X[/Output Ciphertext/]
+    X --> Y([End])
             </div>
         </div>
         
@@ -301,9 +282,9 @@ flowchart TD
             <div class="mermaid">
 flowchart TD
     Start([البداية])
-    Start --> InputKey[/إدخال مصفوفة المفتاح K بحجم n×n/]
-    InputKey --> CalcDet[حساب محدد المصفوفة: det K mod 26]
-    CalcDet --> CheckInv{هل gcd det K, 26 = 1؟}
+    Start --> InputKey[/إدخال مصفوفة المفتاح K بحجم nxn/]
+    InputKey --> CalcDet["حساب محدد المصفوفة: det(K) mod 26"]
+    CalcDet --> CheckInv{"هل gcd(det K, 26) = 1؟"}
     
     CheckInv -->|لا| Error[/خطأ: المصفوفة غير قابلة للعكس/]
     Error --> End1([النهاية])
@@ -319,23 +300,23 @@ flowchart TD
     
     DivideBlocks --> EncBlock[معالجة كتلة]
     EncBlock --> ToVector[تحويل الكتلة إلى متجه عمودي P]
-    ToVector --> MatMult1[ضرب المصفوفات: C = K × P mod 26]
+    ToVector --> MatMult1["ضرب المصفوفات: C = K x P mod 26"]
     MatMult1 --> VectorToText1[تحويل المتجه الناتج إلى نص]
     VectorToText1 --> MoreBlocks1{المزيد من الكتل؟}
     MoreBlocks1 -->|نعم| EncBlock
     MoreBlocks1 -->|لا| OutputEnc[/إخراج النص المشفر C/]
     OutputEnc --> End2([النهاية])
     
-    Mode -->|فك تشفير| CalcInvMatrix[حساب المصفوفة العكسية: K⁻¹ mod 26]
-    CalcInvMatrix --> Step1[حساب مصفوفة المرافقات: adj K]
-    Step1 --> Step2[حساب: det K ⁻¹ mod 26]
-    Step2 --> Step3[حساب: K⁻¹ = det K ⁻¹ × adj K mod 26]
+    Mode -->|فك تشفير| CalcInvMatrix["حساب المصفوفة العكسية: K⁻¹ mod 26"]
+    CalcInvMatrix --> Step1["حساب مصفوفة المرافقات: adj(K)"]
+    Step1 --> Step2["حساب: det(K)⁻¹ mod 26"]
+    Step2 --> Step3["حساب: K⁻¹ = det-K⁻¹ x adj-K mod 26"]
     
     Step3 --> InputCipher[/إدخال النص المشفر C/]
     InputCipher --> DivideBlocks2[تقسيم إلى كتل بحجم n]
     DivideBlocks2 --> DecBlock[معالجة كتلة]
     DecBlock --> ToVector2[تحويل الكتلة إلى متجه C]
-    ToVector2 --> MatMult2[ضرب المصفوفات: P = K⁻¹ × C mod 26]
+    ToVector2 --> MatMult2["ضرب المصفوفات: P = K⁻¹ x C mod 26"]
     MatMult2 --> VectorToText2[تحويل المتجه الناتج إلى نص]
     VectorToText2 --> MoreBlocks2{المزيد من الكتل؟}
     MoreBlocks2 -->|نعم| DecBlock
@@ -365,14 +346,14 @@ flowchart TD
     Mode -->|تشفير| InputKey[/إدخال المفتاح الأولي K/]
     InputKey --> InputPlain[/إدخال النص الصريح P/]
     InputPlain --> InitKey[تهيئة: مفتاح التشفير = K]
-    InitKey --> EncLoop[لكل حرف Pᵢ في النص]
+    InitKey --> EncLoop[لكل حرف P في النص]
     
-    EncLoop --> ConvertP[تحويل Pᵢ إلى رقم: pᵢ = Pᵢ - A]
-    ConvertP --> GetKeyChar[الحصول على حرف المفتاح الحالي Kᵢ]
-    GetKeyChar --> ConvertK[تحويل Kᵢ إلى رقم: kᵢ = Kᵢ - A]
-    ConvertK --> EncCalc[حساب: cᵢ = pᵢ + kᵢ mod 26]
-    EncCalc --> ToCharEnc[تحويل cᵢ إلى حرف Cᵢ]
-    ToCharEnc --> AppendKey[إلحاق Pᵢ بمفتاح التشفير]
+    EncLoop --> ConvertP[تحويل P إلى رقم p]
+    ConvertP --> GetKeyChar[الحصول على حرف المفتاح الحالي K]
+    GetKeyChar --> ConvertK[تحويل K إلى رقم k]
+    ConvertK --> EncCalc["حساب: c = (p + k) mod 26"]
+    EncCalc --> ToCharEnc[تحويل c إلى حرف C]
+    ToCharEnc --> AppendKey[إلحاق P بمفتاح التشفير]
     AppendKey --> MoreEnc{المزيد من الأحرف؟}
     
     MoreEnc -->|نعم| EncLoop
@@ -382,14 +363,14 @@ flowchart TD
     Mode -->|فك تشفير| InputKey2[/إدخال المفتاح الأولي K/]
     InputKey2 --> InputCipher[/إدخال النص المشفر C/]
     InputCipher --> InitKey2[تهيئة: مفتاح فك التشفير = K]
-    InitKey2 --> DecLoop[لكل حرف Cᵢ في النص المشفر]
+    InitKey2 --> DecLoop[لكل حرف C في النص المشفر]
     
-    DecLoop --> ConvertC[تحويل Cᵢ إلى رقم: cᵢ = Cᵢ - A]
-    ConvertC --> GetKeyChar2[الحصول على حرف المفتاح الحالي Kᵢ]
-    GetKeyChar2 --> ConvertK2[تحويل Kᵢ إلى رقم: kᵢ = Kᵢ - A]
-    ConvertK2 --> DecCalc[حساب: pᵢ = cᵢ - kᵢ mod 26]
-    DecCalc --> ToCharDec[تحويل pᵢ إلى حرف Pᵢ]
-    ToCharDec --> AppendKey2[إلحاق Pᵢ الناتج بمفتاح فك التشفير]
+    DecLoop --> ConvertC[تحويل C إلى رقم c]
+    ConvertC --> GetKeyChar2[الحصول على حرف المفتاح الحالي K]
+    GetKeyChar2 --> ConvertK2[تحويل K إلى رقم k]
+    ConvertK2 --> DecCalc["حساب: p = (c - k) mod 26"]
+    DecCalc --> ToCharDec[تحويل p إلى حرف P]
+    ToCharDec --> AppendKey2[إلحاق P الناتج بمفتاح فك التشفير]
     AppendKey2 --> MoreDec{المزيد من الأحرف؟}
     
     MoreDec -->|نعم| DecLoop
@@ -428,25 +409,25 @@ flowchart TD
     
     Process[معالجة كل حرف]
     Process --> Loop[لكل موضع i]
-    Loop --> ConvertP[تحويل الحرف Pᵢ إلى رقم: pᵢ]
-    ConvertP --> ConvertK[تحويل حرف المفتاح Kᵢ إلى رقم: kᵢ]
+    Loop --> ConvertP[تحويل الحرف P إلى رقم p]
+    ConvertP --> ConvertK[تحويل حرف المفتاح K إلى رقم k]
     
     ConvertK --> Method{اختر طريقة التشفير}
     
-    Method -->|XOR| XORCalc[حساب: cᵢ = pᵢ ⊕ kᵢ]
+    Method -->|XOR| XORCalc[حساب: c = p XOR k]
     XORCalc --> MoreXOR{المزيد من الأحرف؟}
     MoreXOR -->|نعم| Loop
     MoreXOR -->|لا| Output1[/إخراج النص المشفر C/]
     Output1 --> Note1[ملاحظة: فك التشفير = نفس العملية]
-    Note1 --> Decrypt1[لفك التشفير: pᵢ = cᵢ ⊕ kᵢ]
+    Note1 --> Decrypt1[لفك التشفير: p = c XOR k]
     Decrypt1 --> End2([النهاية])
     
-    Method -->|Modular Addition| ModCalc[حساب: cᵢ = pᵢ + kᵢ mod 26]
+    Method -->|Modular Addition| ModCalc["حساب: c = (p + k) mod 26"]
     ModCalc --> MoreMod{المزيد من الأحرف؟}
     MoreMod -->|نعم| Loop
     MoreMod -->|لا| Output2[/إخراج النص المشفر C/]
     Output2 --> Note2[ملاحظة: فك التشفير متماثل]
-    Note2 --> Decrypt2[لفك التشفير: pᵢ = cᵢ - kᵢ mod 26]
+    Note2 --> Decrypt2["لفك التشفير: p = (c - k) mod 26"]
     Decrypt2 --> KeyWarning[/تحذير: لا تعد استخدام المفتاح أبداً!/]
     KeyWarning --> End3([النهاية])
             </div>
