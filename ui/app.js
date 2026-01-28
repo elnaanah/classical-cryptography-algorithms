@@ -53,6 +53,24 @@ function isCoprime(a, b) {
 // ALGORITHM IMPLEMENTATIONS
 // ============================================================================
 
+// ============================================================================
+// ALGORITHM CLASSIFICATION (Educational)
+// ============================================================================
+
+const algorithmClassification = {
+    caesar: { type: 'Substitution', subtype: 'Monoalphabetic', security: '⭐ Weak', securityLevel: 1 },
+    multiplicative: { type: 'Substitution', subtype: 'Monoalphabetic', security: '⭐ Weak', securityLevel: 1 },
+    affine: { type: 'Substitution', subtype: 'Monoalphabetic', security: '⭐⭐ Weak', securityLevel: 2 },
+    monoalphabetic: { type: 'Substitution', subtype: 'Monoalphabetic', security: '⭐⭐ Weak', securityLevel: 2 },
+    vigenere: { type: 'Substitution', subtype: 'Polyalphabetic', security: '⭐⭐ Medium', securityLevel: 2 },
+    autokey: { type: 'Substitution', subtype: 'Polyalphabetic', security: '⭐⭐⭐ Medium+', securityLevel: 3 },
+    otp: { type: 'Substitution', subtype: 'Polyalphabetic', security: '⭐⭐⭐⭐⭐ Perfect*', securityLevel: 5 },
+    playfair: { type: 'Substitution', subtype: 'Polygraphic (Block)', security: '⭐⭐⭐ Medium', securityLevel: 3 },
+    hill: { type: 'Substitution', subtype: 'Polygraphic (Block)', security: '⭐⭐⭐ Medium+', securityLevel: 3 },
+    railfence: { type: 'Transposition', subtype: 'Geometric', security: '⭐⭐ Weak', securityLevel: 2 },
+    columnar: { type: 'Transposition', subtype: 'Columnar', security: '⭐⭐⭐ Medium', securityLevel: 3 }
+};
+
 const algorithms = {
     // -------------------------------------------------------------------------
     // CAESAR CIPHER
@@ -903,6 +921,9 @@ const UI = {
             algoFormula: document.getElementById('algo-formula'),
             algoDesc: document.getElementById('algo-desc'),
             eduHintText: document.getElementById('edu-hint-text'),
+            tagType: document.getElementById('tag-type'),
+            tagSubtype: document.getElementById('tag-subtype'),
+            tagSecurity: document.getElementById('tag-security'),
             inputText: document.getElementById('input-text'),
             outputText: document.getElementById('output-text'),
             btnEncrypt: document.getElementById('btn-encrypt'),
@@ -1026,12 +1047,24 @@ const UI = {
     updateAlgorithmUI() {
         const algo = this.elements.algorithmSelect.value;
         const algoData = algorithms[algo];
+        const classification = algorithmClassification[algo];
         
         // Update info card
         this.elements.algoName.textContent = algoData.name;
         this.elements.algoFormula.textContent = algoData.formula;
         this.elements.algoDesc.textContent = algoData.description;
         this.elements.eduHintText.textContent = algoData.hint;
+        
+        // Update classification tags
+        this.elements.tagType.textContent = classification.type;
+        this.elements.tagSubtype.textContent = classification.subtype;
+        this.elements.tagSecurity.textContent = classification.security;
+        
+        // Update security tag color
+        this.elements.tagSecurity.classList.remove('security-high');
+        if (classification.securityLevel >= 5) {
+            this.elements.tagSecurity.classList.add('security-high');
+        }
         
         // Hide all key inputs
         this.elements.keyNumber.classList.add('hidden');
