@@ -68,10 +68,14 @@ class EllipticCurve {
   isOnCurve(P) {
     if (isInfinity(P)) return true;
     
-    const { x, y } = P;
-    const left = (y * y) % this.p;
-    const right = ((x * x * x) + (this.a * x) + this.b) % this.p;
-    return ((left - right) % this.p + this.p) % this.p === 0n;
+    const x = BigInt(P.x);
+    const y = BigInt(P.y);
+    const p = BigInt(this.p);
+    const a = BigInt(this.a);
+    const b = BigInt(this.b);
+    const left = (y * y) % p;
+    const right = ((x * x * x) + (a * x) + b) % p;
+    return ((left - right) % p + p) % p === 0n;
   }
 
   // Point Addition: P + Q
@@ -88,28 +92,34 @@ class EllipticCurve {
     // Case 2: Q is infinity
     if (isInfinity(Q)) return P;
     
-    const { p, a } = this;
+    // Ensure all values are BigInt
+    const p = BigInt(this.p);
+    const a = BigInt(this.a);
+    const Px = BigInt(P.x);
+    const Py = BigInt(P.y);
+    const Qx = BigInt(Q.x);
+    const Qy = BigInt(Q.y);
     
     // Case 3: P = -Q (points are inverses)
-    if (P.x === Q.x && ((P.y + Q.y) % p === 0n)) {
+    if (Px === Qx && ((Py + Qy) % p === 0n)) {
       return INFINITY;
     }
     
     let lambda;
     
-    if (P.x === Q.x && P.y === Q.y) {
+    if (Px === Qx && Py === Qy) {
       // Case 4: Point Doubling (P = Q)
       // λ = (3x₁² + a) / (2y₁) mod p
-      const numerator = (3n * P.x * P.x + a) % p;
-      const denominator = (2n * P.y) % p;
+      const numerator = (3n * Px * Px + a) % p;
+      const denominator = (2n * Py) % p;
       const denominatorInv = modInverse(denominator, p);
       if (denominatorInv === null) return INFINITY;
       lambda = (numerator * denominatorInv) % p;
     } else {
       // Case 5: Point Addition (P ≠ Q)
       // λ = (y₂ - y₁) / (x₂ - x₁) mod p
-      const numerator = ((Q.y - P.y) % p + p) % p;
-      const denominator = ((Q.x - P.x) % p + p) % p;
+      const numerator = ((Qy - Py) % p + p) % p;
+      const denominator = ((Qx - Px) % p + p) % p;
       const denominatorInv = modInverse(denominator, p);
       if (denominatorInv === null) return INFINITY;
       lambda = (numerator * denominatorInv) % p;
@@ -118,8 +128,8 @@ class EllipticCurve {
     // Calculate new point R = P + Q
     // x₃ = λ² - x₁ - x₂ mod p
     // y₃ = λ(x₁ - x₃) - y₁ mod p
-    let x3 = (lambda * lambda - P.x - Q.x) % p;
-    let y3 = (lambda * (P.x - x3) - P.y) % p;
+    let x3 = (lambda * lambda - Px - Qx) % p;
+    let y3 = (lambda * (Px - x3) - Py) % p;
     
     // Ensure positive modulo
     x3 = ((x3 % p) + p) % p;
@@ -132,6 +142,9 @@ class EllipticCurve {
   // Uses double-and-add algorithm (analogous to square-and-multiply)
   // Computes P + P + ... + P (k times)
   multiply(k, P) {
+    // Ensure k is BigInt
+    k = BigInt(k);
+    
     if (k === 0n || isInfinity(P)) {
       return INFINITY;
     }
@@ -159,7 +172,9 @@ class EllipticCurve {
   // Get the negative of a point: -P = (x, -y mod p)
   negate(P) {
     if (isInfinity(P)) return INFINITY;
-    return { x: P.x, y: (this.p - P.y) % this.p };
+    const p = BigInt(this.p);
+    const Py = BigInt(P.y);
+    return { x: P.x, y: (p - Py) % p };
   }
 }
 
@@ -305,16 +320,19 @@ function decryptPoint(ciphertext, privateKey, curve) {
 // Real implementations use more sophisticated encoding
 function encodeToPoint(m, curve) {
   const message = BigInt(m);
+  const a = BigInt(curve.a);
+  const b = BigInt(curve.b);
+  const p = BigInt(curve.p);
   
   // Try to find a point with x = m (or nearby)
   for (let x = message; x < message + 100n; x++) {
     // Calculate y² = x³ + ax + b
-    const ySquared = (x * x * x + curve.a * x + curve.b) % curve.p;
+    const ySquared = (x * x * x + a * x + b) % p;
     
     // Try to find square root (Tonelli-Shanks simplified for small primes)
-    for (let y = 0n; y < curve.p; y++) {
-      if ((y * y) % curve.p === ySquared) {
-        const point = { x: x % curve.p, y };
+    for (let y = 0n; y < p; y++) {
+      if ((y * y) % p === ySquared) {
+        const point = { x: x % p, y };
         if (curve.isOnCurve(point)) {
           return { point, offset: x - message };
         }
