@@ -166,24 +166,24 @@ class EllipticCurve {
 // Pre-defined small elliptic curves for educational use
 // These are NOT secure for real cryptography!
 
-// Curve 1: y² = x³ + 2x + 3 (mod 97)
-// Small curve for quick demonstrations
+// Curve 1: y² = x³ + x + 1 (mod 167)
+// Good curve with order 144 - handles ASCII characters well
 const CURVE_SMALL = new EllipticCurve(
-  2n,   // a
-  3n,   // b
-  97n,  // p (prime)
-  { x: 3n, y: 6n },  // Generator point G
-  5n    // Order of G (small for demo)
+  1n,   // a
+  1n,   // b
+  167n, // p (prime)
+  { x: 2n, y: 41n },  // Generator point G
+  144n  // Order of G
 );
 
 // Curve 2: y² = x³ + x + 6 (mod 11)
-// Very small curve for step-by-step learning
+// Very small curve for step-by-step learning (limited use)
 const CURVE_TINY = new EllipticCurve(
   1n,   // a
   6n,   // b
   11n,  // p
   { x: 2n, y: 7n },  // Generator point G
-  7n    // Order of G
+  7n    // Order of G - only for very small numbers
 );
 
 // Curve 3: y² = x³ + 7 (mod 17) - similar structure to secp256k1
@@ -343,6 +343,67 @@ function decrypt(encryptedData, privateKey, curve = CURVE_SMALL) {
   return decodeFromPoint(point, offset);
 }
 
+// String encryption - encrypts each character
+function encryptString(plaintext, publicKey, curve = CURVE_SMALL) {
+  const encrypted = [];
+  for (const char of plaintext) {
+    const m = char.charCodeAt(0);
+    const { point: M, offset } = encodeToPoint(m, curve);
+    
+    // Find a k that doesn't produce infinity
+    let k, C1, kQ, C2;
+    let attempts = 0;
+    do {
+      k = randomBigInt(1n, curve.n - 1n);
+      C1 = curve.multiply(k, curve.G);
+      kQ = curve.multiply(k, publicKey.Q);
+      C2 = curve.add(M, kQ);
+      attempts++;
+    } while ((isInfinity(C1) || isInfinity(C2)) && attempts < 100);
+    
+    if (isInfinity(C1) || isInfinity(C2)) {
+      throw new Error('Encryption failed - curve too small for this message');
+    }
+    
+    encrypted.push(`${C1.x},${C1.y};${C2.x},${C2.y};${offset}`);
+  }
+  return encrypted.join('|');
+}
+
+function decryptString(ciphertext, privateKey, curve = CURVE_SMALL) {
+  const parts = ciphertext.split('|');
+  let plaintext = '';
+  for (const part of parts) {
+    const [c1Str, c2Str, offsetStr] = part.split(';');
+    const [c1x, c1y] = c1Str.split(',').map(s => BigInt(s));
+    const [c2x, c2y] = c2Str.split(',').map(s => BigInt(s));
+    const offset = BigInt(offsetStr);
+    const C1 = { x: c1x, y: c1y };
+    const C2 = { x: c2x, y: c2y };
+    const dC1 = curve.multiply(privateKey.d, C1);
+    const negDC1 = curve.negate(dC1);
+    const M = curve.add(C2, negDC1);
+    const m = M.x - offset;
+    plaintext += String.fromCharCode(Number(m));
+  }
+  return plaintext;
+}
+
+// Generate random BigInt in range [min, max)
+function randomBigInt(min, max) {
+  const range = max - min;
+  const bits = range.toString(2).length;
+  let result;
+  do {
+    let hex = '';
+    for (let i = 0; i < Math.ceil(bits / 4); i++) {
+      hex += Math.floor(Math.random() * 16).toString(16);
+    }
+    result = BigInt('0x' + (hex || '0')) % range;
+  } while (result < 0n);
+  return min + result;
+}
+
 // Convert point to string for display
 function pointToString(P) {
   if (isInfinity(P)) return 'O (infinity)';
@@ -365,6 +426,8 @@ module.exports = {
   decodeFromPoint,
   encrypt,
   decrypt,
+  encryptString,
+  decryptString,
   pointToString
 };
 

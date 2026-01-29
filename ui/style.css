@@ -526,6 +526,110 @@ footer {
     color: #95a5a6;
 }
 
+/* Hex Counter (DES/AES) */
+.hex-counter {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+#hex-count {
+    font-weight: 600;
+    color: #3498db;
+}
+
+/* Key Generation Section (ElGamal/ECC) */
+.keygen-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.keygen-section label {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 0;
+}
+
+.keygen-section select {
+    width: auto;
+    padding: 8px 12px;
+}
+
+.btn-generate {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: #9b59b6;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-generate:hover {
+    background: #8e44ad;
+}
+
+/* Keys Display */
+.keys-display {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.9rem;
+}
+
+.key-row {
+    padding: 4px 0;
+    display: flex;
+    gap: 8px;
+}
+
+.key-row strong {
+    color: #555;
+    min-width: 100px;
+}
+
+.key-row span {
+    color: #2c3e50;
+    word-break: break-all;
+}
+
+.key-row.private {
+    background: #fff3cd;
+    margin: 8px -15px -12px -15px;
+    padding: 8px 15px;
+    border-radius: 0 0 6px 6px;
+    border-top: 1px dashed #ffc107;
+}
+
+.key-row.private strong {
+    color: #856404;
+}
+
+.key-row.private span {
+    color: #856404;
+}
+
+/* Modern/Public-Key Tag Colors */
+.tag-type.modern {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
+.tag-type.asymmetric {
+    background: #fce4ec;
+    color: #c2185b;
+    border: 1px solid #f48fb1;
+}
+
 /* Utility */
 .hidden {
     display: none !important;
