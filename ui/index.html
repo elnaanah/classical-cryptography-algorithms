@@ -33,6 +33,14 @@
                         <option value="railfence">Rail Fence Cipher</option>
                         <option value="columnar">Columnar Transposition</option>
                     </optgroup>
+                    <optgroup label="Modern Symmetric">
+                        <option value="des">DES (Data Encryption Standard)</option>
+                        <option value="aes">AES-128</option>
+                    </optgroup>
+                    <optgroup label="Public-Key Cryptography">
+                        <option value="elgamal">ElGamal</option>
+                        <option value="ecc">ECC (Elliptic Curve)</option>
+                    </optgroup>
                 </select>
             </section>
 
@@ -162,6 +170,55 @@
                     </div>
                     <span class="hint">Matrix determinant must be coprime with 26 (det ∉ {0, 2, 4, 6, 8, 10, 12, 13, 14, ...})</span>
                     <div id="hill-det" class="hill-det">Determinant: <strong>—</strong></div>
+                </div>
+
+                <!-- DES/AES: Hex Key -->
+                <div id="key-hex" class="key-input hidden">
+                    <input type="text" id="key-hex-text" placeholder="Enter hexadecimal key">
+                    <span id="key-hex-hint" class="hint"></span>
+                    <div class="hex-counter">
+                        <span id="hex-count">0</span>/<span id="hex-required">16</span> hex characters
+                    </div>
+                </div>
+
+                <!-- ElGamal: Key Generation -->
+                <div id="key-elgamal" class="key-input hidden">
+                    <div class="keygen-section">
+                        <label>Prime Size:</label>
+                        <select id="elgamal-prime">
+                            <option value="0">Small (p=467)</option>
+                            <option value="1">Medium (p=1019)</option>
+                            <option value="2">Large (p=2027)</option>
+                        </select>
+                        <button type="button" id="btn-gen-elgamal" class="btn-generate">Generate Keys</button>
+                    </div>
+                    <div id="elgamal-keys" class="keys-display hidden">
+                        <div class="key-row"><strong>p:</strong> <span id="elgamal-p"></span></div>
+                        <div class="key-row"><strong>g:</strong> <span id="elgamal-g"></span></div>
+                        <div class="key-row"><strong>y (public):</strong> <span id="elgamal-y"></span></div>
+                        <div class="key-row private"><strong>x (private):</strong> <span id="elgamal-x"></span></div>
+                    </div>
+                    <span class="hint">Generate keys first, then encrypt/decrypt messages</span>
+                </div>
+
+                <!-- ECC: Key Generation -->
+                <div id="key-ecc" class="key-input hidden">
+                    <div class="keygen-section">
+                        <label>Curve:</label>
+                        <select id="ecc-curve">
+                            <option value="tiny">Tiny (p=11) - demo only</option>
+                            <option value="small" selected>Small (p=167)</option>
+                            <option value="secp">secp-like (p=17) - demo only</option>
+                        </select>
+                        <button type="button" id="btn-gen-ecc" class="btn-generate">Generate Keys</button>
+                    </div>
+                    <div id="ecc-keys" class="keys-display hidden">
+                        <div class="key-row"><strong>Curve:</strong> y² = x³ + <span id="ecc-a"></span>x + <span id="ecc-b"></span> (mod <span id="ecc-p"></span>)</div>
+                        <div class="key-row"><strong>G:</strong> (<span id="ecc-gx"></span>, <span id="ecc-gy"></span>)</div>
+                        <div class="key-row"><strong>Q (public):</strong> (<span id="ecc-qx"></span>, <span id="ecc-qy"></span>)</div>
+                        <div class="key-row private"><strong>d (private):</strong> <span id="ecc-d"></span></div>
+                    </div>
+                    <span class="hint">ECC uses small demo curves - enter small numbers (0-50) for encryption</span>
                 </div>
             </section>
 
